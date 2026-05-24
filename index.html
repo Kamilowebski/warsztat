@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AutoSerwis TurboFix | Warsztat Samochodowy</title>
+    <meta
+      name="description"
+      content="TurboFix - kompleksowy serwis samochodowy: mechanika, diagnostyka, klimatyzacja i wulkanizacja."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Manrope:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const services = [
+        {
+          title: "Diagnostyka komputerowa",
+          desc: "Szybkie wykrywanie usterek silnika, elektroniki i układów bezpieczeństwa.",
+          price: "od 120 zł",
+        },
+        {
+          title: "Mechanika pojazdowa",
+          desc: "Naprawy zawieszenia, hamulców, rozrządu i układu wydechowego.",
+          price: "od 180 zł",
+        },
+        {
+          title: "Serwis klimatyzacji",
+          desc: "Napełnianie, odgrzybianie i test szczelności dla pełnego komfortu.",
+          price: "od 199 zł",
+        },
+        {
+          title: "Wulkanizacja",
+          desc: "Wymiana opon, wyważanie kół i sezonowe przechowywanie.",
+          price: "od 100 zł",
+        },
+      ];
+
+      const testimonials = [
+        {
+          name: "Marta K.",
+          text: "Zrobili mi auto przed wyjazdem w 1 dzień. Konkret, kontakt i uczciwe ceny.",
+        },
+        {
+          name: "Tomasz W.",
+          text: "Najlepsza diagnostyka w okolicy. W końcu ktoś trafił z usterką od razu.",
+        },
+        {
+          name: "Kamil P.",
+          text: "Regularnie serwisuję flotę firmową. Terminowo i bez niespodzianek.",
+        },
+      ];
+
+      function App() {
+        const [formData, setFormData] = React.useState({
+          name: "",
+          phone: "",
+          email: "",
+          message: "",
+        });
+        const [errors, setErrors] = React.useState({});
+        const [status, setStatus] = React.useState("");
+
+        const validate = () => {
+          const nextErrors = {};
+          const phoneDigits = formData.phone.replace(/\s+/g, "");
+
+          if (formData.name.trim().length < 2) {
+            nextErrors.name = "Podaj imię (min. 2 znaki).";
+          }
+
+          if (!/^\+?\d{9,15}$/.test(phoneDigits)) {
+            nextErrors.phone = "Podaj poprawny numer telefonu (9-15 cyfr).";
+          }
+
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+            nextErrors.email = "Podaj poprawny adres e-mail.";
+          }
+
+          if (formData.message.trim().length < 10) {
+            nextErrors.message = "Wiadomość powinna mieć min. 10 znaków.";
+          }
+
+          return nextErrors;
+        };
+
+        const handleChange = (event) => {
+          const { name, value } = event.target;
+          setFormData((prev) => ({ ...prev, [name]: value }));
+          setStatus("");
+        };
+
+        const handleSubmit = (event) => {
+          event.preventDefault();
+          const nextErrors = validate();
+          setErrors(nextErrors);
+
+          if (Object.keys(nextErrors).length > 0) {
+            setStatus("error");
+            return;
+          }
+
+          setStatus("success");
+          setFormData({ name: "", phone: "", email: "", message: "" });
+        };
+
+        return (
+          <>
+            <header className="topbar" id="start">
+              <div className="container row between center">
+                <a href="#start" className="logo">
+                  <span>Turbo</span>Fix
+                </a>
+                <nav className="nav">
+                  <a href="#uslugi">Usługi</a>
+                  <a href="#o-nas">O nas</a>
+                  <a href="#opinie">Opinie</a>
+                  <a href="#kontakt">Kontakt</a>
+                </nav>
+                <a href="tel:+48123456789" className="btn btn-small">
+                  Zadzwoń
+                </a>
+              </div>
+            </header>
+
+            <main>
+              <section className="hero">
+                <div className="container hero-grid">
+                  <div>
+                    <p className="eyebrow">Warsztat samochodowy • Warszawa</p>
+                    <h1>Twój samochód w dobrych rękach.</h1>
+                    <p className="lead">
+                      Kompleksowa obsługa aut osobowych i dostawczych. Szybkie terminy,
+                      jasna wycena i gwarancja na wykonane naprawy.
+                    </p>
+                    <div className="actions">
+                      <a href="#kontakt" className="btn">
+                        Umów wizytę
+                      </a>
+                      <a href="#uslugi" className="btn btn-ghost">
+                        Zobacz ofertę
+                      </a>
+                    </div>
+                  </div>
+                  <aside className="hero-card">
+                    <h3>Dzisiaj wolne terminy</h3>
+                    <p>Przegląd okresowy • Wymiana oleju • Diagnostyka</p>
+                    <a href="tel:+48123456789">+48 123 456 789</a>
+                    <small>Pon-Pt: 8:00-18:00 • Sob: 9:00-14:00</small>
+                  </aside>
+                </div>
+              </section>
+
+              <section className="section" id="uslugi">
+                <div className="container">
+                  <h2>Nasze usługi</h2>
+                  <div className="cards">
+                    {services.map((item) => (
+                      <article className="card" key={item.title}>
+                        <h3>{item.title}</h3>
+                        <p>{item.desc}</p>
+                        <strong>{item.price}</strong>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
+              <section className="section about" id="o-nas">
+                <div className="container about-grid">
+                  <div>
+                    <h2>Dlaczego TurboFix?</h2>
+                    <p>
+                      Działamy od 2014 roku i obsłużyliśmy już ponad 9000 pojazdów.
+                      Łączymy doświadczenie mechaników z nowoczesną diagnostyką.
+                    </p>
+                    <ul>
+                      <li>Gwarancja na naprawy i części</li>
+                      <li>Przejrzysty kosztorys przed startem prac</li>
+                      <li>Możliwość auta zastępczego</li>
+                    </ul>
+                  </div>
+                  <div className="stats">
+                    <div>
+                      <span>12+</span>
+                      <p>lat doświadczenia</p>
+                    </div>
+                    <div>
+                      <span>9 000+</span>
+                      <p>obsłużonych aut</p>
+                    </div>
+                    <div>
+                      <span>4.9/5</span>
+                      <p>średnia ocen klientów</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section className="section" id="opinie">
+                <div className="container">
+                  <h2>Opinie klientów</h2>
+                  <div className="cards">
+                    {testimonials.map((item) => (
+                      <blockquote className="card quote" key={item.name}>
+                        <p>"{item.text}"</p>
+                        <cite>{item.name}</cite>
+                      </blockquote>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
+              <section className="section contact" id="kontakt">
+                <div className="container contact-grid">
+                  <div>
+                    <h2>Kontakt</h2>
+                    <p>Umów wizytę telefonicznie lub napisz wiadomość.</p>
+                    <p>
+                      <strong>Adres:</strong> ul. Mechaników 12, 00-101 Warszawa
+                    </p>
+                    <p>
+                      <strong>Telefon:</strong> +48 123 456 789
+                    </p>
+                    <p>
+                      <strong>Email:</strong> kontakt@turbofix.pl
+                    </p>
+                  </div>
+                  <form className="form" onSubmit={handleSubmit} noValidate>
+                    <label>
+                      Imię
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Twoje imię"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                      />
+                      {errors.name && <small className="error">{errors.name}</small>}
+                    </label>
+                    <label>
+                      Telefon
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="+48..."
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                      />
+                      {errors.phone && <small className="error">{errors.phone}</small>}
+                    </label>
+                    <label>
+                      E-mail
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="twoj@email.pl"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                      />
+                      {errors.email && <small className="error">{errors.email}</small>}
+                    </label>
+                    <label>
+                      Wiadomość
+                      <textarea
+                        rows="4"
+                        name="message"
+                        placeholder="Jak możemy pomóc?"
+                        value={formData.message}
+                        onChange={handleChange}
+                        required
+                      />
+                      {errors.message && <small className="error">{errors.message}</small>}
+                    </label>
+                    <button className="btn" type="submit">
+                      Wyślij
+                    </button>
+                    {status === "success" && (
+                      <p className="success">Dziękujemy! Wiadomość została poprawnie wysłana.</p>
+                    )}
+                    {status === "error" && (
+                      <p className="error">Popraw wskazane pola formularza.</p>
+                    )}
+                  </form>
+                </div>
+              </section>
+            </main>
+
+            <footer className="footer">
+              <div className="container row between center">
+                <p>© 2026 AutoSerwis TurboFix</p>
+                <a href="#start">Do góry</a>
+              </div>
+            </footer>
+          </>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
